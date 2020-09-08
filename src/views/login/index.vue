@@ -8,12 +8,12 @@
             <!-- 输入手机号区域 -->
         <el-form class="form_number">
             <el-form-item prop="number">
-                <el-input aria-placeholder="请输入手机号"></el-input>
+                <el-input placeholder="请输入手机号"></el-input>
             </el-form-item>
 
         <!-- 验证码区域 -->
             <el-form-item  prop="code">
-                <el-input aria-placeholder="请输入验证码"></el-input>
+                <el-input placeholder="请输入验证码"></el-input>
             </el-form-item>
 
             <!-- 验证区域 -->
