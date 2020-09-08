@@ -1,66 +1,59 @@
 <template>
-    <!-- 表单区域 -->
-    <div class="form">
-            <!-- login区域 -->
-        <div class="form_login">
-            <img src="./logo_index.png" alt="">
-        </div>
-            <!-- 输入手机号区域 -->
-        <el-form class="form_number">
-            <el-form-item prop="number">
-                <el-input placeholder="请输入手机号"></el-input>
+    <!-- 登录 -->
+    <div class="login_container">
+            <!-- form表单区域 -->
+        <el-form class="login_form" :model="user">
+            <!-- logo区域 -->
+            <div class="login_logo"></div>
+            <!-- 手机号输入框 -->
+            <el-form-item class="loginFormNumber" prop="number">
+                <el-input placeholder="请输入手机号" v-model="user.number"></el-input>
             </el-form-item>
 
-        <!-- 验证码区域 -->
-            <el-form-item  prop="code">
-                <el-input placeholder="请输入验证码"></el-input>
+            <!-- 验证码区域 -->
+            <el-form-item class="loginFormCode" prop="code">
+                <el-input placeholder="请输入验证码" v-model="user.code"></el-input>
+            </el-form-item>
+
+            <!-- 单选按钮区域 -->
+            <el-form-item>
+                <el-checkbox v-model="checked">我已阅读并同意用户协议和隐私条款</el-checkbox>
             </el-form-item>
 
             <!-- 验证区域 -->
-            <el-form-item class="form_button">
-                <el-button type="primary" >立即创建</el-button>
-                <el-button >重置</el-button>
+            <el-form-item >
+                <el-button class="login_form_button" type="primary" >登录</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <style lang="less">
-body{
-    width: 100%;
-    height: 100%;
-    background:url(../../images/login_bg.jpg);
+.login_container{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    // flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: url(./login_bg.jpg) no-repeat;
     background-size: cover;
-}
-.form{
-    width: 450px;
-    height: 300px;
-    background-color: #ffffff;
-    border-radius: 3px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    .form_login{
-        margin-top: 10px;
-        margin-bottom: 20px;
-        width: 100%;
-        height: 50px;
-        text-align: center;
-        img{
-            height: 100%;
+    .login_form{
+        padding: 30px;
+        min-width: 300px;
+        background-color: #ffffff;
+        .login_logo{
+            margin-bottom: 10px;
+            width: 300px;
+            height: 57px;
+            background: url(./logo_index.png) no-repeat;
         }
-    }
-    .form_number{
-        position: absolute;
-        bottom:0;
-        width: 100%;
-        padding: 0  20px;
-        box-sizing: border-box;
-    }
-    .form_botton{
-        display: flex;
-        justify-content: flex-end;
+        .login_form_button{
+            width: 100%;
+        }
     }
 }
 </style>
@@ -69,6 +62,11 @@ body{
 export default {
   data () {
     return {
+      user: {
+        number: '',
+        code: ''
+      },
+      checked: false,
       loginFormRules: {
         number: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
