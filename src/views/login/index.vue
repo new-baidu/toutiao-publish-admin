@@ -92,8 +92,17 @@ export default {
         data: user
       }).then(res => {
         console.log(res)
+
+        // 登陆成功消息提示
+        this.$message({
+          message: '登录成功',
+          type: 'success'
+        })
       }).catch(err => {
         console.log('登陆失败', err)
+
+        // 登陆失败消息提示
+        this.$message.error('登陆失败，你的手机号或验证码输入错误')
       })
     }
   }
