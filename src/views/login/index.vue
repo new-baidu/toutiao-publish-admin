@@ -22,7 +22,7 @@
 
             <!-- 验证区域 -->
             <el-form-item >
-                <el-button class="login_form_button" type="primary"  @click="onLogin">登录</el-button>
+                <el-button class="login_form_button" type="primary"  @click="onLogin" :loading="loginLoading">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -69,6 +69,7 @@ export default {
         code: ''
       },
       checked: false,
+      loginLoading: false,
       loginFormRules: {
         mobile: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -85,6 +86,8 @@ export default {
     onLogin: function () {
       const user = this.user
 
+      // 点击开启loginLoading等待
+      this.loginLoading = true
       request({
         method: 'POST',
         url: '/mp/v1_0/authorizations',
@@ -98,11 +101,17 @@ export default {
           message: '登录成功',
           type: 'success'
         })
+
+        // 点击后关闭loginLoading等待
+        this.loginLoading = false
       }).catch(err => {
         console.log('登陆失败', err)
 
         // 登陆失败消息提示
         this.$message.error('登陆失败，你的手机号或验证码输入错误')
+
+        // 点击后关闭loginLoading等待
+        this.loginLoading = false
       })
     }
   }
