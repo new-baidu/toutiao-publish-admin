@@ -2,17 +2,17 @@
     <!-- 登录 -->
     <div class="login_container">
             <!-- form表单区域 -->
-        <el-form class="login_form" :model="user">
+        <el-form class="login_form" :model="user" :rules="loginFormRules">
             <!-- logo区域 -->
             <div class="login_logo"></div>
             <!-- 手机号输入框 -->
-            <el-form-item class="loginFormNumber" prop="number">
-                <el-input placeholder="请输入手机号" v-model="user.number"></el-input>
+            <el-form-item class="loginFormNumber" prop="mobile">
+                <el-input placeholder="请输入手机号" v-model="user.mobile" ></el-input>
             </el-form-item>
 
             <!-- 验证码区域 -->
-            <el-form-item class="loginFormCode" prop="code">
-                <el-input placeholder="请输入验证码" v-model="user.code"></el-input>
+            <el-form-item class="loginFormCode" prop="code" >
+                <el-input placeholder="请输入验证码" v-model="user.code" ref="loginFormRules.code"></el-input>
             </el-form-item>
 
             <!-- 单选按钮区域 -->
@@ -22,7 +22,7 @@
 
             <!-- 验证区域 -->
             <el-form-item >
-                <el-button class="login_form_button" type="primary" >登录</el-button>
+                <el-button class="login_form_button" type="primary"  @click="onLogin">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -46,9 +46,9 @@
         min-width: 300px;
         background-color: #ffffff;
         .login_logo{
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             width: 300px;
-            height: 57px;
+            height: 47px;
             background: url(./logo_index.png) no-repeat;
         }
         .login_form_button{
@@ -59,24 +59,42 @@
 </style>
 
 <script>
+import request from '@/utils/request.js'
+
 export default {
   data () {
     return {
       user: {
-        number: '',
+        mobile: '',
         code: ''
       },
       checked: false,
       loginFormRules: {
-        number: [
+        mobile: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 11, max: 11, message: '长度在 11 个数字', trigger: 'blur' }
         ],
         code: [
           { required: true, message: '请输验证码', trigger: 'blur' },
-          { min: 4, max: 6, message: '长度在 9 到 15 个字符', trigger: 'blur' }
+          { min: 4, max: 6, message: '长度在 4 到  6个字符', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    onLogin: function () {
+      const user = this.user
+
+      request({
+        method: 'POST',
+        url: '/mp/v1_0/authorizations',
+        // data用来设置请求体
+        data: user
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log('登陆失败', err)
+      })
     }
   }
 }
