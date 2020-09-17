@@ -17,7 +17,7 @@
 
             <!-- 单选按钮区域 -->
             <el-form-item>
-                <el-checkbox v-model="checked" >我已阅读并同意用户协议和隐私条款</el-checkbox>
+                <el-checkbox v-model="user.trigger" >我已阅读并同意用户协议和隐私条款</el-checkbox>
             </el-form-item>
 
             <!-- 验证区域 -->
@@ -31,7 +31,6 @@
 <script>
 import { login } from '@/api/user.js'
 // 引入首页
-import '@/views/login/layout.vue'
 
 export default {
   data () {
@@ -80,18 +79,19 @@ export default {
 
       // 接口
       login(this.user).then(res => {
-        console.log(res)
-
         // 登陆成功消息提示
         this.$message({
           message: '登录成功',
           type: 'success'
         })
-
-        // 登录成功跳转主页
-        this.$router.push('/layout')
         // 点击后关闭loginLoading等待
         this.loginLoading = false
+
+        // 登录成功跳转主页
+        this.$router.push('/')
+
+        // 将接口返回的用户相关数据放到本地存储方便应用数据共享
+        window.localStorage.setItem('user', JSON.stringify(res.data.data))
       }).catch(err => {
         console.log('登陆失败', err)
 
