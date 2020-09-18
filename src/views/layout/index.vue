@@ -30,7 +30,7 @@
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </div>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>个人设置</el-dropdown-item>
+                      <el-dropdown-item class="el-icon-setting">个人设置</el-dropdown-item>
                       <el-dropdown-item>用户退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>

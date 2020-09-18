@@ -28,6 +28,19 @@ const routes = [
   }
 
 ]
-export default new VueRouter({
+const router = new VueRouter({
   routes
 })
+
+// to：要去的路由信息
+// from：来自那里的路由信息
+// next放行信息
+// 导航守卫
+router.beforeEach((to, from, next) => {
+  console.log('页面进来了')
+
+  // 页面放行
+  next()
+})
+
+export default router
