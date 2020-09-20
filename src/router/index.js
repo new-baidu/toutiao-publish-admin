@@ -1,28 +1,34 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 引入表单验证页面
-import Login from '@/views/login/index.vue'
+import Login from '@/views/login/'
 // 引入首页页面
-import Home from '@/views/home/index.vue'
-import Layout from '@/views/layout/index.vue'
+import Home from '@/views/home/'
+import Layout from '@/views/layout/'
+import Article from '@/views/article/'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/login',
-    name: Login,
+    name: 'Login',
     component: Login
   },
   {
     path: '/',
-    name: Layout,
+    name: 'Layout',
     component: Layout,
     children: [
       {
         path: '/',
-        name: Home,
+        name: 'Home',
         component: Home
+      },
+      {
+        path: '/article',
+        name: 'Article',
+        component: Article
       }
     ]
   }
@@ -37,10 +43,23 @@ const router = new VueRouter({
 // next放行信息
 // 导航守卫
 router.beforeEach((to, from, next) => {
-  console.log('页面进来了')
-
   // 页面放行
-  next()
+  const user = JSON.parse(window.localStorage.getItem('user'))
+  // 校验非登录页面的状态
+  if (to.path !== '/login') {
+    // console.log(user)
+    if (user) {
+      // 已登录允许通过
+      next()
+      console.log(user)
+    } else {
+      // 没有登录跳转到登陆页面
+      next('/login')
+    }
+  } else {
+    // 登陆页面正常允许通过
+    next()
+  }
 })
 
 export default router

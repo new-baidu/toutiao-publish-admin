@@ -39,6 +39,7 @@ export default {
         mobile: '',
         code: ''
       },
+      munted () {},
       checked: false,
       loginLoading: false,
       loginFormRules: {
