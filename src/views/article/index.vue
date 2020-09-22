@@ -61,23 +61,47 @@
         </div>
           <!-- 数据列表 -->
           <el-table
-            :data="tableData"
+            :data="articles"
             style="width: 100%"
             class="list-table"
             size="mini">
             <el-table-column
               prop="date"
-              label="日期"
+              label="封面"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="name"
-              label="姓名"
+              prop="title"
+              label="标题"
               width="180">
+            </el-table-column>
+            <el-table-column
+              prop="status"
+              label="状态">
+            </el-table-column>
+            <el-table-column
+              prop="pubdate"
+              label="发布时间">
             </el-table-column>
             <el-table-column
               prop="address"
-              label="地址">
+              label="操作">
+
+              <template >
+                <el-button
+                  size="mini"
+                  circle
+                  icon="el-icon-edit"
+                  type="primary"
+                  ></el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  circle
+                  icon="el-icon-delete"
+                  ></el-button>
+              </template>
+
             </el-table-column>
           </el-table>
           <!--/ 数据列表 -->
@@ -130,32 +154,9 @@ export default {
         resource: '',
         desc: ''
       },
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
 
       // 数据列表
-      articles: [
-      ],
+      articles: [],
       articleStatus: [
         { status: 0, text: '草稿', type: 'info' },
         { status: 1, text: '待审核', type: '' },
@@ -182,7 +183,7 @@ export default {
     loadArticles () {
       getArticles().then(res => {
         this.articles = res.data.data.results
-        console.log(this.articles)
+        console.log(res)
       })
     },
 
