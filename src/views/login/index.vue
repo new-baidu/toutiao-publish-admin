@@ -88,11 +88,11 @@ export default {
         // 点击后关闭loginLoading等待
         this.loginLoading = false
 
-        // 登录成功跳转主页
-        this.$router.push('/')
-
         // 将接口返回的用户相关数据放到本地存储方便应用数据共享
         window.localStorage.setItem('user', JSON.stringify(res.data.data))
+
+        // 登录成功跳转主页
+        this.$router.push('/')
       }).catch(err => {
         console.log('登陆失败', err)
 

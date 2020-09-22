@@ -51,7 +51,6 @@ router.beforeEach((to, from, next) => {
     if (user) {
       // 已登录允许通过
       next()
-      console.log(user)
     } else {
       // 没有登录跳转到登陆页面
       next('/login')
