@@ -22,7 +22,7 @@
 
             <!-- 验证区域 -->
             <el-form-item >
-                <el-button class="login_form_button" type="primary"  @click="onLogin" :loading="loginLoading">登录</el-button>
+                <el-button class="login_form_button" type="primary" @click="onLogin" :loading="loginLoading">登录</el-button>
             </el-form-item>
         </el-form>
     </div>

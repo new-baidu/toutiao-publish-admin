@@ -16,7 +16,7 @@
           <!-- 数据筛选表单 -->
           <el-form ref="form" :model="form" label-width="40px" size="mini">
             <el-form-item label="状态">
-              <el-radio-group v-model="form.resource">
+              <el-radio-group v-model="status">
                 <el-radio :label="null">全部</el-radio>
                 <el-radio :label="0">草稿</el-radio>
                 <el-radio :label="1">待审核</el-radio>
@@ -49,7 +49,8 @@
 
             <!-- 按钮 -->
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <!-- button按钮的click事件有个默认参数，当你没有指定参数的时候，他会默认传递一个没用的数据《page: {"isTrusted":true}》 -->
+              <el-button type="primary" @click="loadArticles(1)">查询</el-button>
             </el-form-item>
             <!--/ 按钮 -->
           </el-form>
@@ -57,7 +58,7 @@
           <!--/ 数据筛选表单 -->
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          根据筛选条件共查询到 46147 条结果：
+          根据筛选条件共查询到 {{totalCount}} 条结果：
         </div>
           <!-- 数据列表 -->
           <el-table
@@ -69,6 +70,19 @@
               prop="date"
               label="封面"
               width="180">
+
+              <!-- 封面 -->
+              <template slot-scope="scope">
+                <img
+                class="article-cover"
+                v-if="scope.row.cover.images[0]"
+                :src="scope.row.cover.images[0]" alt="">
+                <img
+                v-else  class="article-cover"
+                src="./no-cover.gif" alt="">
+              </template>
+              <!--/ 封面 -->
+
             </el-table-column>
             <el-table-column
               prop="title"
@@ -81,11 +95,12 @@
 
               <!-- 如果需要在自定义列模板中获取当前遍历项数据，那么就在   template   上声明     slot-scope="scope" -->
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.status === 0">草稿</el-tag>
+                <el-tag :type="articleStatus[scope.row.status].type">{{ articleStatus[scope.row.status].text }}</el-tag>
+                <!-- <el-tag v-if="scope.row.status === 0">草稿</el-tag>
                 <el-tag type="warning" v-else-if="scope.row.status === 1">待审核</el-tag>
                 <el-tag type="success" v-else-if="scope.row.status === 2">审核通过</el-tag>
                 <el-tag type="danger" v-else-if="scope.row.status === 3">审核失败</el-tag>
-                <el-tag type="info" v-else-if="scope.row.status === 4">已删除</el-tag>
+                <el-tag type="info" v-else-if="scope.row.status === 4">已删除</el-tag> -->
               </template>
 
             </el-table-column>
@@ -120,8 +135,10 @@
           <el-pagination
           background
           layout="prev, pager, next"
-          :total="totalCount">
-          </el-pagination>
+          :total="totalCount"
+          @current-change="onCurrentChange"
+          :page-size="pageSize"
+          />
           <!--/ 列表分页 -->
       </el-card>
 
@@ -175,30 +192,37 @@ export default {
         { status: 4, text: '已删除', type: 'danger' }
       ],
 
-      // 总数据大小
-      totalCount: 1000,
-      // 每页大小
-      pageSize: 0,
-      // 查询文章的状态，不传是全部
-      status: null
+      totalCount: 1000, // 总数据大小
+      pageSize: 10, // 每页大小
+      status: null // 查询文章的状态，不传是全部
     }
   },
   computed: {},
   watch: {},
   created () {
-    this.loadArticles()
+    this.loadArticles(1)
   },
   mounted () {},
   methods: {
-    loadArticles () {
-      getArticles().then(res => {
-        this.articles = res.data.data.results
+    loadArticles (page = 1) {
+      getArticles({
+        page,
+        per_page: this.pageSize,
+        status: this.status
+      }).then(res => {
+        const { results, total_count: totalCount } = res.data.data
+        this.articles = results
+        this.totalCount = totalCount
         console.log(res)
       })
     },
 
     onSubmit () {
       console.log('submit!')
+    },
+
+    onCurrentChange (page) {
+      this.loadArticles(page)
     }
   }
 }
@@ -210,5 +234,10 @@ export default {
 }
 .list-table{
   margin-bottom: 20px;
+}
+
+.article-cover{
+  width: 60px;
+  background-size: cover;
 }
 </style>>
