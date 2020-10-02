@@ -60,9 +60,9 @@
         <!-- 按钮 -->
         <el-form-item>
           <!-- button按钮的click事件有个默认参数，当你没有指定参数的时候，他会默认传递一个没用的数据《page: {"isTrusted":true}》 -->
-          <el-button type="primary"
-          @click="loadArticles(1)"
-          :disabled="loading">查询</el-button>
+          <el-button type="primary" @click="loadArticles(1)" :disabled="loading"
+            >查询</el-button
+          >
         </el-form-item>
         <!--/ 按钮 -->
       </el-form>
@@ -229,7 +229,6 @@ export default {
         this.articles = results
         this.totalCount = totalCount
         this.loading = false // 关闭加载数据中
-        console.log(res)
       })
     },
     // 获取文章频道
@@ -244,20 +243,25 @@ export default {
     },
 
     // 删除文档
-    onDeleteArticle () {
+    onDeleteArticle (articleId) {
+      console.log(articleId.toString())
       this.$confirm('确认删除吗?', '删除提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        // 确认执行
-        deleteArticle()
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
+        .then(() => {
+          // 确认执行
+          deleteArticle(articleId.toString()).then(res => {
+            console.log(res)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }

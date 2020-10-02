@@ -27,6 +27,6 @@ export const deleteArticle = articleId => {
     method: 'DELETE',
     // 看见文档中的路径参数需要在 url 中传递
     // 看见接口路径中有 :xxx 的字段，则需要传递路径参数
-    url: `/mp/articles/${articleId}`
+    url: `/mp/v1_0/articles/${articleId}`
   })
 }
