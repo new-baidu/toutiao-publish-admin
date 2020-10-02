@@ -110,7 +110,7 @@
         </el-table-column>
         <el-table-column prop="pubdate" label="发布时间"> </el-table-column>
         <el-table-column prop="address" label="操作">
-          <template>
+          <template slot-scope="scope">
             <el-button
               size="mini"
               circle
@@ -122,6 +122,7 @@
               type="danger"
               circle
               icon="el-icon-delete"
+              @click="onDeleteArticle(scope.row.id)"
             ></el-button>
           </template>
         </el-table-column>
@@ -143,7 +144,11 @@
 </template>
 
 <script>
-import { getArticles, getArtiCleChannels } from '@/api/article'
+import {
+  getArticles,
+  getArtiCleChannels,
+  deleteArticle
+} from '@/api/article'
 
 export default {
   name: 'ArticleIndex',
@@ -236,6 +241,23 @@ export default {
 
     onCurrentChange (page) {
       this.loadArticles(page)
+    },
+
+    // 删除文档
+    onDeleteArticle () {
+      this.$confirm('确认删除吗?', '删除提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 确认执行
+        deleteArticle()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
