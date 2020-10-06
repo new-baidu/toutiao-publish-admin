@@ -59,7 +59,7 @@
 
         <!-- 按钮 -->
         <el-form-item>
-          <!-- button按钮的click事件有个默认参数，当你没有指定参数的时候，他会默认传递一个没用的数据《page: {"isTrusted":true}》 -->
+          <!-- button按钮的click事件有个默认参数，当你没有指定参数的时候，他会默认传递一个没用的数据<page: {"isTrusted":true}》 -->
           <el-button type="primary" @click="loadArticles(1)" :disabled="loading"
             >查询</el-button
           >
@@ -116,6 +116,7 @@
               circle
               icon="el-icon-edit"
               type="primary"
+              @click="$router.push('/publish?id=' + scope.row.id.toString())"
             ></el-button>
             <el-button
               size="mini"
