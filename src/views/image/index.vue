@@ -12,9 +12,9 @@
 
       <!-- 按钮组 -->
       <div>
-        <el-radio-group v-model="radio1" size="mini">
-          <el-radio-button label="全部"></el-radio-button>
-          <el-radio-button label="收藏"></el-radio-button>
+        <el-radio-group v-model="radio1" size="mini" @change="onCollectChange">
+          <el-radio-button :label="false">全部</el-radio-button>
+          <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
       </div>
       <!--/ 按钮组 -->
@@ -44,21 +44,26 @@ export default {
   data () {
     return {
       radio1: '全部',
-      radio2: '收藏',
       images: [] // 素材列表
     }
   },
   computed: {},
   watch: {},
   created () {
-    this.loadImages()
+    this.loadImages(false)
   },
   mounted () { },
   methods: {
-    loadImages () {
-      getImage().then(res => {
+    loadImages (collect) {
+      getImage({
+        collect
+      }).then(res => {
         this.images = res.data.data.results
       })
+    },
+
+    onCollectChange (value) {
+      this.loadImages(value)
     }
   }
 }
