@@ -11,12 +11,17 @@
       <!--/ 面包屑路径导航 -->
 
       <!-- 表单 -->
-      <el-form :model="article" label-width="40px" ref="form">
-        <el-form-item label="标题">
+      <el-form
+        :model="article"
+        label-width="60px"
+        ref="publish-form"
+        :rules="formRules"
+      >
+        <el-form-item label="标题" prop="title">
           <el-input v-model="article.title"></el-input>
         </el-form-item>
 
-        <el-form-item label="内容">
+        <el-form-item label="内容" prop="content">
           <!-- <el-input type="textarea" v-model="article.content"></el-input> -->
           <el-tiptap
             v-model="article.content"
@@ -36,7 +41,7 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="频道区域">
+        <el-form-item label="频道区域" prop="channel_id">
           <el-select placeholder="请选择频道" v-model="article.channel_id">
             <el-option
               :label="channels.name"
@@ -137,7 +142,40 @@ export default {
         new Fullscreen(), // 全屏
         new CodeBlock(), // 预览
         new Preview() // 代码块
-      ]
+      ],
+
+      // 表单验证
+      formRules: {
+        title: [
+          {
+            required: true, message: '请输入文章标题', trigger: 'blur'
+          },
+          {
+            min: 5, max: 30, message: '长度5-30个字符', trigger: 'blur'
+          }
+        ],
+        content: [
+          {
+            validator (rule, value, callback) {
+              if (value === '<p></p>') {
+                // 验证失败
+                callback(new Error('请输入文章内容'))
+              } else {
+                // 验证通过
+                callback()
+              }
+            }
+          },
+          {
+            required: true, message: '请输入文章内容', trigger: 'blur'
+          }
+        ],
+        channel_id: [
+          {
+            required: true, message: '请选择文章频道'
+          }
+        ]
+      }
     }
   },
   computed: {},
@@ -164,28 +202,33 @@ export default {
 
     // 添加文章
     onPublish (draft = false) {
-      // 找到数据接口
-      // 封装请求方法
-      // 请求提交表单
-      const articleId = this.$route.query.id
-      if (articleId) {
-        updateArticle(articleId, this.article, draft).then(res => {
-          console.log(res)
-          this.$message({
-            message: '修改成功',
-            type: 'success'
+      this.$refs['publish-form'].validate(valid => {
+        if (!valid) {
+          return
+        }
+        const articleId = this.$route.query.id
+        if (articleId) {
+          updateArticle(articleId, this.article, draft).then(res => {
+            console.log(res)
+            this.$message({
+              message: '修改成功',
+              type: 'success'
+            })
           })
-        })
-      } else {
-        addArticle(this.article, draft).then(res => {
-          // 处理相应结果
-          this.$message({
-            message: '发布成功',
-            type: 'success'
+        } else {
+          addArticle(this.article, draft).then(res => {
+            // 处理相应结果
+            this.$message({
+              message: '发布成功',
+              type: 'success'
+            })
           })
-        })
-      }
+        }
+      })
     },
+    // 找到数据接口
+    // 封装请求方法
+    // 请求提交表单
 
     // 修改文章
     loadArticle () {
