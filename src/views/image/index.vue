@@ -42,7 +42,11 @@
 
           <!-- 收藏和删除 -->
           <div class="image-action">
-            <i class="el-icon-star-on"></i>
+            <i
+              :class="{
+                'el-icon-star-on': img.is_collected,
+                'el-icon-star-off': !is_collected
+                }"></i>
             <i class="el-icon-delete-solid"></i>
           </div>
           <!--/ 收藏和删除 -->
