@@ -42,15 +42,32 @@
 
           <!-- 收藏和删除 -->
           <div class="image-action">
-            <i
+            <el-button
+              type="warning"
+              :icon="img.is_collected ? 'el-icon-star-on' : 'el-icon-star-off'"
+              circle
+              size="small"
+              @click="onCollect(img)"
+              :loading="img.loading"
+            ></el-button>
+            <!--<i
               :class="{
                 'el-icon-star-on': img.is_collected,
-                'el-icon-star-off': !is_collected
-                }"></i>
-            <i class="el-icon-delete-solid"></i>
+                'el-icon-star-off': !img.is_collected,
+              }"
+              @click="onClick(img)"
+            ></i>-->
+            <!-- <i class="el-icon-delete-solid"></i> -->
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              size="mini"
+              @click="onDelete(img)"
+              :loading="img.loading"
+            ></el-button>
           </div>
           <!--/ 收藏和删除 -->
-
         </el-col>
       </el-row>
       <!--/ 素材列表 -->
@@ -92,7 +109,11 @@
 </template>
 
 <script>
-import { getImage } from '@/api/image'
+import {
+  getImages,
+  collectImage,
+  deleteImage
+} from '@/api/image'
 
 export default {
   name: 'ImageIndex',
@@ -122,12 +143,18 @@ export default {
   methods: {
     loadImages (page = 1) {
       // 重置高亮页码， 防止页面页码不对应
-      getImage({
+      getImages({
         collect: this.collect,
         page,
         per_page: this.pageSize
       }).then(res => {
-        this.images = res.data.data.results
+        const results = res.data.data.results
+        results.forEach(img => {
+          // img对象本来没用 loading 数据
+          // 我们这里收到的往里面添加该数据是用来控制每个收藏按钮的 loading  状态
+          img.loading = false
+        })
+        this.images = results
         this.totalCount = res.data.data.total_count
       })
     },
@@ -150,6 +177,31 @@ export default {
 
     onPageChange (page) {
       this.loadImages(page)
+    },
+
+    // 点击图片收藏
+    onCollect (img) {
+      img.loading = true
+      collectImage(img.id, !img.is_collected).then(res => {
+        img.is_collected = !img.is_collected
+        img.loading = false
+      })
+      // 已经收藏， 取消收藏
+      // if (img.is_collected) {
+      //   collectImage(img.id, false)
+      // } else {
+      //   // 没有收藏， 添加收藏
+      //   collectImage(img.id, true)
+      // }
+    },
+
+    // 取消图片收藏
+    onDelete (img) {
+      img.loading = true
+      deleteImage(img.id).then(res => {
+        this.loadImages(this.page)
+        img.loading = false
+      })
     }
   }
 }
@@ -162,17 +214,17 @@ export default {
 .image-action {
   position: absolute;
   bottom: 4px;
-  right: 5px;
-  left: 5px;
+  right: 2.5px;
+  left: 2.5px;
   height: 40px;
-  background-color: rgba(204, 204, 204, .5);
+  background-color: rgba(204, 204, 204, 0.5);
   display: flex;
   font-size: 25px;
   justify-content: space-around;
   align-items: center;
-  color: #fff;
+  color: #409eff;
 }
-.image-item{
+.image-item {
   position: relative;
 }
 </style>
