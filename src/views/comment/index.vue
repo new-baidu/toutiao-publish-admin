@@ -37,7 +37,7 @@
                 v-model="scope.row.comment_status"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
-                @click="value = !value"
+                @change="onStatusChange(scope.row)"
               >
               </el-switch>
             </template>
@@ -79,8 +79,9 @@ export default {
         response_type: 'comment'
       }).then(res => {
         this.articles = res.data.data.results
-        console.log(this.articles)
       })
+    },
+    onStatusChange () {
     }
   }
 }
