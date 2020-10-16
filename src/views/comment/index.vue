@@ -25,7 +25,7 @@
           <el-table-column prop="fans_comment_count" label="粉丝评论数">
           </el-table-column>
 
-          <el-table-column prop="comment_status" label="状态">
+          <el-table-column prop="comment_status" label="评论状态">
             <template slot-scope="scope">
               {{ scope.row.comment_status ? '正常' : '关闭' }}
             </template>
@@ -38,6 +38,7 @@
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 @change="onStatusChange(scope.row)"
+                :disabled="scope.row.statusDisabled"
               >
               </el-switch>
             </template>
@@ -57,7 +58,10 @@
 </template>
 
 <script>
-import { getArticles } from '@/api/article'
+import {
+  getArticles,
+  updateCommentStatus
+} from '@/api/article'
 export default {
   name: 'CommentIndex',
   components: {},
@@ -78,10 +82,25 @@ export default {
       getArticles({
         response_type: 'comment'
       }).then(res => {
-        this.articles = res.data.data.results
+        const { results } = res.data.data
+        results.forEach(article => {
+          article.statusDisabled = false
+        })
+        this.articles = results
       })
     },
-    onStatusChange () {
+
+    onStatusChange (article) {
+      // 禁用开关
+      article.statusDisabled = true
+      updateCommentStatus(article.id.toString(), article.comment_status).then(res => {
+        // 启用开关
+        article.statusDisabled = false
+        this.$message({
+          type: 'success',
+          message: article.comment_status ? '开启文章评论状态' : '关闭文章评论状态'
+        })
+      })
     }
   }
 }

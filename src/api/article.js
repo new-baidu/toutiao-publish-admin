@@ -67,7 +67,7 @@ export const getArticle = (articleId) => {
 export const updateCommentStatus = (articleId, allowComment) => {
   return request({
     method: 'PUT',
-    url: '/mp/v1_0/comment/status',
+    url: '/mp/v1_0/comments/status',
     params: {
       article_id: articleId
     },
