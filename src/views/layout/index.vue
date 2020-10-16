@@ -15,7 +15,7 @@
                       }
                       true:作用类名
                       fales：不做用类名
-                     -->
+                    -->
                     <i :class="{
                       'el-icon-s-unfold' : isCollapse,
                       'el-icon-s-fold' : !isCollapse
