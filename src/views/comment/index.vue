@@ -10,14 +10,39 @@
         <!--/ 面包屑 -->
 
         <!-- 表格 -->
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="data" label="标题" width="180">
+        <el-table :data="articles" style="width: 100%">
+
+          <el-table-column prop="title" label="标题" width="180">
           </el-table-column>
-          <el-table-column prop="name" label="总评论数" width="150">
+
+          <el-table-column
+            prop="total_comment_count"
+            label="总评论数"
+            width="150"
+          >
           </el-table-column>
-          <el-table-column prop="address" label="粉丝评论数"> </el-table-column>
-          <el-table-column prop="status" label="状态"> </el-table-column>
-          <el-table-column prop="address" label="操作"> </el-table-column>
+
+          <el-table-column prop="fans_comment_count" label="粉丝评论数">
+          </el-table-column>
+
+          <el-table-column prop="comment_status" label="状态">
+            <template slot-scope="scope">
+              {{ scope.row.comment_status ? '正常' : '关闭' }}
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="address" label="操作">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.comment_status"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                @click="value = !value"
+              >
+              </el-switch>
+            </template>
+
+          </el-table-column>
         </el-table>
         <!--/ 表格 -->
       </div>
@@ -39,23 +64,6 @@ export default {
   props: {},
   data () {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
       articles: []
     }
   },
