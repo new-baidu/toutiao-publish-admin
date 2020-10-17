@@ -11,7 +11,6 @@
 
         <!-- 表格 -->
         <el-table :data="articles" style="width: 100%">
-
           <el-table-column prop="title" label="标题" width="180">
           </el-table-column>
 
@@ -42,16 +41,22 @@
               >
               </el-switch>
             </template>
-
           </el-table-column>
         </el-table>
         <!--/ 表格 -->
       </div>
 
       <!-- 分页 -->
-      <div class="block">
-        <el-pagination layout="prev, pager, next" :total="50"> </el-pagination>
-      </div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="page"
+        :page-sizes="[10, 20, 50]"
+        :page-size.sync="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalCount"
+      >
+      </el-pagination>
       <!--/ 分页 -->
     </el-card>
   </div>
@@ -68,7 +73,10 @@ export default {
   props: {},
   data () {
     return {
-      articles: []
+      articles: [], // 文章数据列表
+      totalCount: 0, // 总数居条数
+      pageSize: 10, // 每页条数
+      page: 1 // 当前页数
     }
   },
   computed: {},
@@ -78,15 +86,26 @@ export default {
   },
   mounted () { },
   methods: {
-    loadArticles () {
+    handleSizeChange () {
+      this.loadArticles(1)
+    },
+    handleCurrentChange (page) {
+      // 页面改变， 加载相对应页码数据
+      this.loadArticles(page)
+    },
+    loadArticles (page = 1) {
+      this.page = page
       getArticles({
-        response_type: 'comment'
+        response_type: 'comment',
+        page,
+        per_page: this.pageSize
       }).then(res => {
         const { results } = res.data.data
         results.forEach(article => {
           article.statusDisabled = false
         })
         this.articles = results
+        this.totalCount = res.data.data.total_count
       })
     },
 
