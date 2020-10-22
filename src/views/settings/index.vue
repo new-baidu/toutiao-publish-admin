@@ -59,12 +59,26 @@
             <p>点击修改头像</p>
           </label>
           <!-- <p @click="$refs.file.click()">点击修改头像</p> -->
-          <input id="file" type="file" hidden ref="file"
-          @change="onFileChange"
+          <input
+            id="file"
+            type="file"
+            hidden
+            ref="file"
+            @change="onFileChange"
           />
         </el-col>
       </el-row>
     </el-card>
+
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <img width="150" :src="previewImage" alt="" />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -83,23 +97,14 @@ export default {
         intro: '',
         email: '',
         photo: ''
-      },
+
+      }, // 用户资料
+      dialogVisible: false, // 控制上传图片裁切预览得显示状态
+      previewImage: '', // 预览图片
       rules: {
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
           { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
-        ],
-        type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-        ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
-        ],
-        desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
         ]
       }
     }
@@ -117,15 +122,29 @@ export default {
     // 获取用户
     loadUser () {
       getUserProfile().then(res => {
-        console.log(res)
         this.user = res.data.data
       })
     },
 
     // 点击修改头像
     onFileChange () {
-      console.log('file change')
+      // 预览图片
+      const file = this.$refs.file
+      const blobData = window.URL.createObjectURL(file.files[0])
+      this.previewImage = blobData
+      // 展示弹出层，预览显示用户选择的图片
+      this.dialogVisible = true
+      // 解决选择相同文件不触发 change 事件
+      this.$refs.file.value = ''
     }
+
+    // handleClose (done) {
+    //   this.$confirm('确认关闭？')
+    //     .then(_ => {
+    //       done()
+    //     })
+    //     .catch(_ => { })
+    // }
   }
 }
 </script>
