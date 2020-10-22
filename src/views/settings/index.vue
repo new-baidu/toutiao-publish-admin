@@ -8,44 +8,39 @@
           <el-breadcrumb-item>个人设置</el-breadcrumb-item>
         </el-breadcrumb>
         <!--/ 面包屑 -->
-
-        <el-button style="float: right; padding: 3px 0" type="text"
-          >操作按钮</el-button
-        >
       </div>
 
       <el-row>
-        <el-col :span="14">
+        <el-col :span="12">
           <!-- 表单 -->
           <el-form
-            :model="ruleForm"
+            :model="user"
             :rules="rules"
-            ref="ruleForm"
+            ref="user"
             label-width="80px"
             class="demo-ruleForm"
             size="small"
           >
-            <el-form-item label="编号"> 123 </el-form-item>
+            <el-form-item label="编号"> {{ user.id }} </el-form-item>
 
-            <el-form-item label="手机"> 456 </el-form-item>
+            <el-form-item label="手机"> {{ user.mobile }} </el-form-item>
 
             <el-form-item label="媒体名称" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
+              <el-input v-model="user.name"></el-input>
             </el-form-item>
 
-            <el-form-item label="媒体介绍" prop="desc">
-              <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+            <el-form-item label="媒体介绍" prop="intro">
+              <el-input type="textarea" v-model="user.intro"></el-input>
             </el-form-item>
 
-            <el-form-item label="邮箱" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="邮箱" prop="emali">
+              <el-input v-model="user.email"></el-input>
             </el-form-item>
 
             <el-form-item>
               <el-button type="primary" @click="submitForm('ruleForm')"
                 >立即创建</el-button
               >
-              <el-button @click="resetForm('ruleForm')">重置</el-button>
             </el-form-item>
           </el-form>
 
@@ -58,7 +53,7 @@
             shape="square"
             :size="200"
             fit="cover"
-            :src="url"
+            :src="user.photo"
           ></el-avatar>
           <p>点击修改头像</p>
         </el-col>
@@ -68,18 +63,20 @@
 </template>
 
 <script>
+import { getUserProfile } from '@/api/user'
 export default {
+  name: 'settingsIndex',
+  components: {},
+  props: {},
   data () {
     return {
-      ruleForm: {
+      user: {
+        id: null,
+        mobile: '',
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        intro: '',
+        email: '',
+        photo: ''
       },
       rules: {
         name: [
@@ -107,19 +104,22 @@ export default {
       }
     }
   },
+  computed: {},
+  watch: {},
+  created () {
+    this.loadUser()
+  },
+  mounted () { },
   methods: {
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    submitForm () {
+      console.log(123)
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+    // 获取用户
+    loadUser () {
+      getUserProfile().then(res => {
+        console.log(res)
+        this.user = res.data.data
+      })
     }
   }
 }
