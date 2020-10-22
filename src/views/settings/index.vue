@@ -49,13 +49,19 @@
 
         <!-- 头像 -->
         <el-col :span="4" :offset="2">
-          <el-avatar
-            shape="square"
-            :size="200"
-            fit="cover"
-            :src="user.photo"
-          ></el-avatar>
-          <p>点击修改头像</p>
+          <label for="file">
+            <el-avatar
+              shape="square"
+              :size="200"
+              fit="cover"
+              :src="user.photo"
+            ></el-avatar>
+            <p>点击修改头像</p>
+          </label>
+          <!-- <p @click="$refs.file.click()">点击修改头像</p> -->
+          <input id="file" type="file" hidden ref="file"
+          @change="onFileChange"
+          />
         </el-col>
       </el-row>
     </el-card>
@@ -86,12 +92,6 @@ export default {
         region: [
           { required: true, message: '请选择活动区域', trigger: 'change' }
         ],
-        date1: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-        ],
-        date2: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-        ],
         type: [
           { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
         ],
@@ -120,6 +120,11 @@ export default {
         console.log(res)
         this.user = res.data.data
       })
+    },
+
+    // 点击修改头像
+    onFileChange () {
+      console.log('file change')
     }
   }
 }
