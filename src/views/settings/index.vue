@@ -39,7 +39,7 @@
 
             <el-form-item>
               <el-button type="primary" @click="submitForm('ruleForm')"
-                >立即创建</el-button
+                >立即修改</el-button
               >
             </el-form-item>
           </el-form>
@@ -147,6 +147,7 @@ export default {
     // }
   }
 }
+
 </script>
 
 <style>
