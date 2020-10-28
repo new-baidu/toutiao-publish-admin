@@ -65,13 +65,19 @@
             hidden
             ref="file"
             @change="onFileChange"
-          />
+          >
         </el-col>
       </el-row>
     </el-card>
 
     <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
-      <img width="150" :src="previewImage" alt="" />
+      <div class="preview-image-wrap">
+        <img
+          class="preview-image"
+          :src="previewImage"
+          alt=""
+        >
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogVisible = false"
@@ -150,5 +156,12 @@ export default {
 
 </script>
 
-<style>
+<style lang="less">
+.preview-image-wrap{
+  .preview-image{
+    display: block;
+    max-width: 100%;
+    height: 200px;
+  }
+}
 </style>
