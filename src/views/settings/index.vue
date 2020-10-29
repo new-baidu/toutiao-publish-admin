@@ -87,8 +87,11 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
+        <el-button
+          type="primary"
+          @click="onUpdataPhoto"
+          >
+          确 定</el-button
         >
       </span>
     </el-dialog>
@@ -168,22 +171,32 @@ export default {
       const image = this.$refs['preview-image']
       // 图片裁切器
       this.cropper = new Cropper(image, {
-        aspectRatio: 16 / 9,
-        crop (event) {
-          console.log(event.detail.x)
-          console.log(event.detail.y)
-          console.log(event.detail.width)
-          console.log(event.detail.height)
-          console.log(event.detail.rotate)
-          console.log(event.detail.scaleX)
-          console.log(event.detail.scaleY)
-        }
+        aspectRatio: 1,
+        viewMode: 1,
+        dragMode: 'none',
+        cropBoxMovable: false
+        // crop (event) {
+        // console.log(event.detail.x)
+        // console.log(event.detail.y)
+        // console.log(event.detail.width)
+        // console.log(event.detail.height)
+        // console.log(event.detail.rotate)
+        // console.log(event.detail.scaleX)
+        // console.log(event.detail.scaleY)
+        // }
       })
     },
     // 点击关闭裁切图片时的动画
     onDialogClosed () {
       // 对话框关闭销毁裁截器
       this.cropper.destroy()
+    },
+    onUpdataPhoto () {
+      this.cropper.getCroppedCanvas().toBlob(file => {
+        console.log(file)
+        const fd = new FormData()
+        fd.append('photo', file)
+      })
     }
   }
 }
