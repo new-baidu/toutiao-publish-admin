@@ -26,3 +26,12 @@ export const getUserProfile = () => {
     // }
   })
 }
+
+// 修改用户头像
+export const updateUserPhoto = data => {
+  return request({
+    method: 'PATCH', // 局部修改
+    url: '/mp/v1_0/user/photo',
+    data
+  })
+}

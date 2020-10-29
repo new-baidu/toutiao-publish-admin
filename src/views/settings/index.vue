@@ -87,19 +87,17 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="onUpdataPhoto"
-          >
-          确 定</el-button
-        >
+        <el-button type="primary" @click="onUpdataPhoto" > 确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserProfile } from '@/api/user'
+import {
+  getUserProfile,
+  updateUserPhoto
+} from '@/api/user'
 import 'cropperjs/dist/cropper.css'
 import Cropper from 'cropperjs'
 
@@ -121,6 +119,7 @@ export default {
       dialogVisible: false, // 控制上传图片裁切预览得显示状态
       previewImage: '', // 预览图片
       cropper: null,
+      locading: false,
       rules: {
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -192,10 +191,23 @@ export default {
       this.cropper.destroy()
     },
     onUpdataPhoto () {
+      // 获取裁切的图片的对象
       this.cropper.getCroppedCanvas().toBlob(file => {
-        console.log(file)
         const fd = new FormData()
         fd.append('photo', file)
+        // 封装请求
+        // 请求更新用户头像请求提交fd
+        updateUserPhoto(fd).then(res => {
+          console.log(res)
+          // 关闭对话框
+          this.dialogVisible = false
+          // 请求更新用户头像
+          // this.loadUser()
+          // 更新视图展示
+          this.user.photo = window.URL.createObjectURL(file)
+          // 把服务端返回的图片进行展示有点慢
+          // this.user.photo = res.data.data.photo
+        })
       })
     }
   }
