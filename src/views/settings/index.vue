@@ -65,18 +65,24 @@
             hidden
             ref="file"
             @change="onFileChange"
-          >
+          />
         </el-col>
       </el-row>
     </el-card>
 
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      @opened="onDialogOpened"
+    >
       <div class="preview-image-wrap">
         <img
           class="preview-image"
           :src="previewImage"
           alt=""
-        >
+          ref="preview-image"
+        />
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -90,6 +96,9 @@
 
 <script>
 import { getUserProfile } from '@/api/user'
+import 'cropperjs/dist/cropper.css'
+import Cropper from 'cropperjs'
+
 export default {
   name: 'settingsIndex',
   components: {},
@@ -142,7 +151,7 @@ export default {
       this.dialogVisible = true
       // 解决选择相同文件不触发 change 事件
       this.$refs.file.value = ''
-    }
+    },
 
     // handleClose (done) {
     //   this.$confirm('确认关闭？')
@@ -151,14 +160,32 @@ export default {
     //     })
     //     .catch(_ => { })
     // }
+
+    onDialogOpened () {
+      const image = this.$refs['preview-image']
+      // 图片裁切器
+      const cropper = new Cropper(image, {
+        aspectRatio: 16 / 9,
+        crop (event) {
+          console.log(event.detail.x)
+          console.log(event.detail.y)
+          console.log(event.detail.width)
+          console.log(event.detail.height)
+          console.log(event.detail.rotate)
+          console.log(event.detail.scaleX)
+          console.log(event.detail.scaleY)
+        }
+      })
+      console.log(cropper)
+    }
   }
 }
 
 </script>
 
 <style lang="less">
-.preview-image-wrap{
-  .preview-image{
+.preview-image-wrap {
+  .preview-image {
     display: block;
     max-width: 100%;
     height: 200px;
