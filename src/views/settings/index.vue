@@ -75,6 +75,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       @opened="onDialogOpened"
+      @closed="onDialogClosed"
     >
       <div class="preview-image-wrap">
         <img
@@ -116,6 +117,7 @@ export default {
       }, // 用户资料
       dialogVisible: false, // 控制上传图片裁切预览得显示状态
       previewImage: '', // 预览图片
+      cropper: null,
       rules: {
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -161,10 +163,11 @@ export default {
     //     .catch(_ => { })
     // }
 
+    // 点击开始裁切图片的动画
     onDialogOpened () {
       const image = this.$refs['preview-image']
       // 图片裁切器
-      const cropper = new Cropper(image, {
+      this.cropper = new Cropper(image, {
         aspectRatio: 16 / 9,
         crop (event) {
           console.log(event.detail.x)
@@ -176,7 +179,11 @@ export default {
           console.log(event.detail.scaleY)
         }
       })
-      console.log(cropper)
+    },
+    // 点击关闭裁切图片时的动画
+    onDialogClosed () {
+      // 对话框关闭销毁裁截器
+      this.cropper.destroy()
     }
   }
 }
