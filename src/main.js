@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-
+console.log(100)
 // 加载全局样式文件
 import './style/index.less'
 // element ui组件库
